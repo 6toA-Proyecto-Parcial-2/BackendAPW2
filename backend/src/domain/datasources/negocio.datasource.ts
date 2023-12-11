@@ -12,5 +12,4 @@ export abstract class NegocioDatasource {
   abstract findById( id: number ): Promise<NegocioEntity>;
   abstract updateById( updateNegocioDto: UpdateNegocioDto ): Promise<NegocioEntity>;
   abstract deleteById( id: number ): Promise<NegocioEntity>;
-a
 }
