@@ -11,7 +11,7 @@ export class UpdateLibroDto {
     get values(){
         const returnObj: {[key:string]: any}= {};
 
-        if (this.ISBN) returnObj.correoISBN = this.ISBN;
+        if (this.ISBN) returnObj.ISBN = this.ISBN;
         if (this.nombreLibro) returnObj.nombreLibro = this.nombreLibro;
         if (this.anopublicacion) returnObj.anopublicacion = this.anopublicacion;
         if (this.edicionLibro) returnObj.edicionLibro = this.edicionLibro;

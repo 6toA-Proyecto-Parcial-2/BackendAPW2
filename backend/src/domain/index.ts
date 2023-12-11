@@ -31,3 +31,15 @@ export * from './entities/nacionalidad.entity';
 export * from './repositories/autor.repository';
 export * from './repositories/genero.repository';
 export * from './repositories/nacionalidad.repository';
+
+
+export * from './datasources/categoria.datasource';
+export * from './datasources/libro.datasource';
+export * from './datasources/editorial.datasource';
+export * from './dtos';
+export * from './entities/categoria.entity';
+export * from './entities/libro.entity';
+export * from './entities/editorial.entity';
+export * from './repositories/categoria.repository';
+export * from './repositories/libro.repository';
+export * from './repositories/editorial.repository';
