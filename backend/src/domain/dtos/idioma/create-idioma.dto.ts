@@ -3,6 +3,7 @@ export class CreateIdiomaDto {
         
         public readonly nombreidioma: string,
         public readonly origenId: number,
+        public readonly idiomaaa?: CreateIdiomaDto[],
     ){}
 
     static create(props: {[key:string]: any}): [string?, CreateIdiomaDto?]{
