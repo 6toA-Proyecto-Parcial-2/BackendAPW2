@@ -1,79 +1,59 @@
+// DDD
 import { Request, Response } from 'express';
-import { prisma } from '../../data/postgres';
 import { CreateAutorDto, UpdateAutorDto } from '../../domain/dtos';
+import { AutorRepository } from '../../domain';
 
 
-export class AutoresController {
+export class AutorController {
+
   //* DI
-  constructor() { }
-  public getAutores = async( req: Request, res: Response ) => {
-    const autores = await prisma.autorModel.findMany();
-    return res.json( autores );
+  constructor(
+    private readonly autorRepository: AutorRepository,
+  ) { }
+
+
+  public getAutor = async ( req: Request, res: Response ) => {
+    const autor = await this.autorRepository.getAll();
+    return res.json( autor );
   };
 
-
-
-
-  public getAutorById = async( req: Request, res: Response ) => {
+  public getAutorById = async ( req: Request, res: Response ) => {
     const id = +req.params.id;
-    if ( isNaN( id ) ) return res.status( 400 ).json( { error: 'ID argument is not a number' } );
 
-    const autor = await prisma.autorModel.findFirst({
-      where: { id }
-    });
-    
-    ( autor )
-      ? res.json( autor )
-      : res.status( 404 ).json( { error: `Autor with id ${ id } not found` } );
+    try {
+      const autor = await this.autorRepository.findById( id );
+      res.json( autor );
+
+    } catch ( error ) {
+      res.status( 400 ).json( { error } );
+    }
+
   };
 
+  public createAutor = async ( req: Request, res: Response ) => {
+    const [ error, createAutorDto ] = CreateAutorDto.create( req.body );
+    if ( error ) return res.status( 400 ).json( { error } );
 
-
-
-  public createAutor = async( req: Request, res: Response ) => {
-    
-    const [error, createAutorDto] = CreateAutorDto.create(req.body);
-    if ( error ) return res.status(400).json({ error });
-
-    const autor = await prisma.autorModel.create({
-      data: createAutorDto!
-    });
-
+    const autor = await this.autorRepository.create( createAutorDto! );
     res.json( autor );
 
   };
 
-
-
-  public updateAutor = async( req: Request, res: Response ) => {
+  public updateAutor = async ( req: Request, res: Response ) => {
     const id = +req.params.id;
-    const [error, updateAutorDto] = UpdateAutorDto.create({...req.body, id});
-    if ( error ) return res.status(400).json({ error });
-    
-    const autor = await prisma.autorModel.findFirst({
-      where: { id }
-    });
-    if ( !autor ) return res.status( 404 ).json( { error: `Autor with id ${ id } not found` } );
-    const updatedAutor = await prisma.autorModel.update({
-      where: { id },
-      data: updateAutorDto!.values
-    });
-    res.json( updatedAutor );
-  }
+    const [ error, updateAutorDto ] = UpdateAutorDto.create( { ...req.body, id } );
+    if ( error ) return res.status( 400 ).json( { error } );
+
+    const updatedAutor = await this.autorRepository.updateById( updateAutorDto! );
+    return res.json( updatedAutor);
+
+  };
 
 
-  public deleteAutor = async(req:Request, res: Response) => {
+  public deleteAutor = async ( req: Request, res: Response ) => {
     const id = +req.params.id;
-    const autor = await prisma.autorModel.findFirst({
-      where: { id }
-    });
+    const deletedAutor = await this.autorRepository.deleteById( id );
+    res.json( deletedAutor );
 
-    if ( !autor ) return res.status(404).json({ error: `Autor with id ${ id } not found` });
-    const deleted = await prisma.autorModel.delete({
-      where: { id }
-    });
-    ( deleted ) 
-      ? res.json( deleted )
-      : res.status(400).json({ error: `Autor with id ${ id } not found` });
-  }
+  };
 }

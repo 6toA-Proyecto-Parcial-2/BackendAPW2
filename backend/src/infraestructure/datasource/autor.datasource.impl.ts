@@ -4,13 +4,13 @@ import { CreateAutorDto, AutorDatasource, AutorEntity, UpdateAutorDto } from '..
 export class AutorDatasourceImpl implements AutorDatasource {
 
   async create( createAutorDto: CreateAutorDto ): Promise<AutorEntity> {
-    const { correoautor, cedulautor, ...rest } = createAutorDto
+    const { genero, nacionalidad, ...rest } = createAutorDto
     
-    const autore = await prisma.autorModel.create({
-      data: createAutorDto!
+    const autor = await prisma.autorModel.create({
+      data: rest
     });
 
-    return AutorEntity.fromObject( autore );
+    return AutorEntity.fromObject( autor );
   }
 
   async getAll(): Promise<AutorEntity[]> {
